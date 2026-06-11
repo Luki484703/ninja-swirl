@@ -27,6 +27,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
 .fb{padding:5px 10px;border-radius:20px;border:none;background:#fff;color:#444;font-size:11px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .fb.on{background:#2e7d32;color:#fff;font-weight:700}
 .qr{display:flex;gap:7px;justify-content:center;margin-bottom:6px}
+.zutwahl{background:#fff;border:1.5px solid #c8e6c9;border-radius:12px;margin-bottom:8px;overflow:hidden}
+.zutwahl-head{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;cursor:pointer;font-size:12.5px;font-weight:700;color:#2e7d32}
+.zutwahl-info{font-weight:400;font-size:11px;color:#888}
+.zutwahl-body{padding:0 13px 12px}
+.zutgrp{margin-bottom:10px}
+.zutlbl{font-size:11px;color:#666;font-weight:700;margin-bottom:6px}
+.zutopts{display:flex;gap:5px;flex-wrap:wrap}
+.zutopt{padding:5px 10px;border-radius:16px;border:1.5px solid #ddd;background:#fff;color:#555;font-size:11px;cursor:pointer}
+.zutopt.on{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:700}
+.zuthint{font-size:10.5px;color:#888;font-style:italic;margin-top:4px}
 .qb{padding:4px 11px;border-radius:20px;border:1.5px solid #ddd;background:#fff;color:#888;font-size:11px;cursor:pointer}
 .qb.on{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:700}
 .qb.on2{border-color:#3949ab;background:#e8eaf6;color:#3949ab;font-weight:700}
@@ -74,7 +84,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
 <div class="hdr">
   <div class="hdr-icon">🍦</div>
   <h1>Ninja Swirl CREAMi Rezepte</h1>
-  <p id="tlbl">68 Rezepte · Kalorienarm · Protein · Klassiker · Spezial</p>
+  <p id="tlbl">78 Rezepte · Kalorienarm · Protein · Klassiker · Spezial</p>
   <div class="hdr-tags">
     <span class="hdr-tag">🌿 Simpel</span><span class="hdr-tag">💪 Protein</span>
     <span class="hdr-tag">🥥 Raffaello</span><span class="hdr-tag">🍓 Yogurette</span>
@@ -89,6 +99,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
     </div>
   </div>
   <input class="si" type="search" placeholder="🔍 Suchen... (Raffaello, Schoko, Protein...)" oninput="onS(this.value)" id="si">
+  <div class="zutwahl" id="zutwahl">
+    <div class="zutwahl-head" onclick="togZut()">
+      <span>⚙️ Meine Zutaten wählen <span class="zutwahl-info" id="zinfo"></span></span>
+      <span id="zchev">▼</span>
+    </div>
+    <div class="zutwahl-body" id="zutbody" style="display:none">
+      <div class="zutgrp">
+        <div class="zutlbl">Basis (Quark/Frischkäse/Joghurt):</div>
+        <div class="zutopts" id="basisopts"></div>
+      </div>
+      <div class="zutgrp">
+        <div class="zutlbl">Sahne (für Klassiker-Light):</div>
+        <div class="zutopts" id="sahneopts"></div>
+      </div>
+      <div class="zuthint">💡 Die Nährwerte passen sich automatisch an deine Auswahl an!</div>
+    </div>
+  </div>
   <div class="fr" id="fr"></div>
   <div class="qr">
     <button class="qb" id="bzf" onclick="tF('zf')">✓ Nur Zuckerfrei</button>
@@ -103,7 +130,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
   </div>
 </div>
 <script>
-var QA=' (oder gleiche Menge: Skyr, Griechischer Joghurt 0% oder Frischkäse light)';
+var QA=' (oder gewählte Basis – siehe oben)';
+// Nährwerte pro 100g der wählbaren Zutaten
+var ZUTATEN={
+  quark:   {name:'Magerquark (Lidl)',    kcal:69, p:12.0, kh:4.0, f:0.3, z:4.0},
+  fk02:    {name:'Frischkäse 0,2% (Exquisa)', kcal:60, p:10.0, kh:3.5, f:0.2, z:3.5},
+  fklight: {name:'Frischkäse light (Milbona)', kcal:190, p:8.0, kh:3.0, f:16.0, z:3.0},
+  joghurt: {name:'Joghurt (Lidl)',       kcal:64, p:6.1, kh:5.5, f:2.0, z:5.5}
+};
+var SAHNE={
+  s7:  {name:'Kochsahne 7%',  kcal:84,  p:1.1, kh:3.8, f:7.0,  z:2.4},
+  s15: {name:'Sahne 15%',     kcal:162, p:2.9, kh:3.8, f:15.0, z:3.8}
+};
 var R=[
 {id:101,k:'simpel',s:'🍌 Bananen-Eis',t:'1 Zutat',fn:'CREAMifit/Sorbet',kp:89,k1:39,p:1.1,kh:20,f:0.3,zn:11,zf:false,
 zu:['3–4 reife Bananen (~400 g)'],
@@ -285,6 +323,34 @@ tp:'Keksbrösel NACH dem Spinnen einrühren – bleiben knusprig!'},
 zu:['150 g Magerquark'+QA,'100 g Frischkäse light','100 ml fettarme Milch','2 TL Erythrit','Abrieb + Saft 1 Zitrone'],
 zb:['Alle Zutaten sehr glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.'],
 tp:'Butterkekse als Mix-in = Cheesecake-Feeling!'},
+{id:407,k:'icecream',s:'🍯 Karamell-Eis light',t:'Light',fn:'Light Ice Cream',kp:108,k1:47,p:9,kh:11,f:2,zn:0,zf:true,
+zu:['250 g Magerquark'+QA,'150 ml fettarme Milch','2 EL zuckerfreier Karamellsirup','2 TL Erythrit','1 Prise Salz','½ TL Vanilleextrakt'],
+zb:['Alle Zutaten sehr glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','Optional zuckerfreien Karamellsirup vor dem Servieren drüber.'],
+tp:'Eine Prise Salz verstärkt den Karamellgeschmack zu Salted Caramel!'},
+{id:408,k:'icecream',s:'🤍 Weiße-Schoko-Eis light',t:'Light',fn:'Light Ice Cream',kp:122,k1:53,p:9,kh:13,f:3,zn:0,zf:true,
+zu:['250 g Magerquark'+QA,'150 ml fettarme Milch','20 g weiße Schokolade zuckerfrei geschmolzen','3 TL Erythrit','1 TL Vanilleextrakt'],
+zb:['Weiße Schokolade schmelzen, mit etwas warmer Milch verrühren.','Alle Zutaten glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.'],
+tp:'Zuckerfreie weiße Schokolade gibt es z.B. von Xucker oder Vivani!'},
+{id:409,k:'icecream',s:'🌰 Haselnuss-Eis light',t:'Light',fn:'Light Ice Cream',kp:128,k1:56,p:9,kh:9,f:5,zn:0,zf:true,
+zu:['250 g Magerquark'+QA,'150 ml fettarme Milch','1 EL Haselnussmus naturell','3 TL Erythrit','½ TL Vanilleextrakt','1 Prise Salz'],
+zb:['Haselnussmus mit etwas warmer Milch glatt rühren.','Alle Zutaten glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.'],
+tp:'Geröstete gehackte Haselnüsse als Mix-in nach dem Spinnen = extra Crunch!'},
+{id:410,k:'icecream',s:'🍒 Kirsch-Schoko-Eis light',t:'Light',fn:'Light Ice Cream',kp:104,k1:45,p:8,kh:11,f:2,zn:0,zf:true,
+zu:['200 g Magerquark'+QA,'100 g TK-Kirschen püriert','120 ml fettarme Milch','1 EL Kakaopulver','3 TL Erythrit','10 g Zartbitterschokolade 85% gehackt'],
+zb:['Kirschen pürieren, Kakao mit Milch anrühren.','Alle Zutaten glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','Schokostücke nach dem Spinnen einrühren.'],
+tp:'Schmeckt wie Schwarzwälder Kirsch – himmlisch!'},
+{id:411,k:'icecream',s:'🥥 Kokos-Eis light',t:'Light',fn:'Light Ice Cream',kp:115,k1:50,p:8,kh:10,f:3.5,zn:0,zf:true,
+zu:['200 g Magerquark'+QA,'150 ml Kokosmilch light','15 g Kokosraspeln','3 TL Erythrit','1 TL Kokosextrakt','½ TL Vanilleextrakt'],
+zb:['Alle Zutaten glatt mixen, Kokosraspeln unterrühren.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.'],
+tp:'Geröstete Kokosraspeln als Topping = tropisches Erlebnis!'},
+{id:412,k:'icecream',s:'🍪 Spekulatius-Eis light',t:'Light',fn:'Light Ice Cream',kp:112,k1:49,p:8,kh:12,f:2,zn:0,zf:true,
+zu:['250 g Magerquark'+QA,'150 ml fettarme Milch','3 TL Erythrit','1 TL Spekulatiusgewürz (Zimt, Kardamom, Nelke)','½ TL Vanilleextrakt','2 zuckerfreie Spekulatius-Kekse zerbröselt'],
+zb:['Quark, Milch, Erythrit und Gewürze glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','Spekulatius-Brösel nach dem Spinnen einrühren.'],
+tp:'Perfekt für die Weihnachtszeit! Spekulatiusgewürz gibt es fertig zu kaufen.'},
+{id:413,k:'icecream',s:'🍪 Keks-Karamell-Eis light',t:'Light',fn:'Light Ice Cream',kp:120,k1:52,p:9,kh:13,f:2.5,zn:0,zf:true,
+zu:['250 g Magerquark'+QA,'150 ml fettarme Milch','1 EL zuckerfreier Karamellsirup','3 TL Erythrit','1 TL Vanilleextrakt','3 zuckerfreie Butterkekse zerbröselt'],
+zb:['Quark, Milch, Karamellsirup und Vanille glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','Keksbrösel nach dem Spinnen einrühren.'],
+tp:'Wie Twix-Eis – Karamell trifft knusprige Kekse!'},
 {id:501,k:'normal',s:'🍦 Vanille klassisch',t:'Klassiker Normal',fn:'Ice Cream/Gelato',kp:210,k1:91,p:4,kh:22,f:12,zn:20,zf:false,
 zu:['240 ml Vollmilch','240 ml Sahne 30%','80 g Zucker','2 TL Vanilleextrakt'],
 zb:['Alle Zutaten verrühren bis Zucker aufgelöst, in Behälter füllen.','24 Std. einfrieren, 10 Min. antauen, Ice Cream starten.'],
@@ -394,7 +460,7 @@ tp:'Optional: ½ Bueno-Stange als Mix-in für den echten Bueno-Biss!'}
 var KATS=[{id:'alle',l:'Alle',e:'🍦'},{id:'simpel',l:'1–2 Zutaten',e:'🌿'},{id:'creamifit',l:'CREAMifit',e:'🍃'},{id:'protein',l:'Protein',e:'💪'},{id:'frogurt',l:'Frozen Yogurt',e:'🥄'},{id:'icecream',l:'Ice Cream light',e:'🧊'},{id:'normal',l:'Klassiker',e:'🍨'},{id:'spezial',l:'⭐ Spezial',e:'🍫'}];
 var KS={simpel:{bg:'#fff3e0',ac:'#e65100'},creamifit:{bg:'#e8f5e9',ac:'#2e7d32'},protein:{bg:'#e3f2fd',ac:'#1565c0'},frogurt:{bg:'#fce4ec',ac:'#880e4f'},icecream:{bg:'#e8eaf6',ac:'#3949ab'},normal:{bg:'#fff8e1',ac:'#f57f17'},spezial:{bg:'#fbe9e7',ac:'#bf360c'}};
 var KL={simpel:'1–2 Zutaten',creamifit:'CREAMifit',protein:'Protein-Eis',frogurt:'Frozen Yogurt',icecream:'Ice Cream light',normal:'Klassiker',spezial:'Spezial'};
-var ST={n:'p',k:'alle',s:'',zf:false,li:false,o:null};
+var ST={n:'p',k:'alle',s:'',zf:false,li:false,o:null,basis:'quark',sahne:'s15'};
 
 function kc(v){return v<100?'#2e7d32':v<200?'#e65100':'#c62828';}
 function setN(v){ST.n=v;document.getElementById('bp').className='tb'+(v==='p'?' on':'');document.getElementById('b1').className='tb'+(v==='1'?' on':'');go();}
@@ -402,6 +468,73 @@ function onS(v){ST.s=v.toLowerCase();go();}
 function tF(f){if(f==='zf'){ST.zf=!ST.zf;document.getElementById('bzf').className='qb'+(ST.zf?' on':'');}else{ST.li=!ST.li;document.getElementById('bli').className='qb'+(ST.li?' on2':'');}go();}
 function setK(id){ST.k=id;ST.o=null;document.querySelectorAll('.fb').forEach(function(b,i){b.className='fb'+(KATS[i].id===id?' on':'');});go();}
 function tog(id){ST.o=ST.o===id?null:id;go();}
+
+// Zutaten-Wähler
+function togZut(){
+  var b=document.getElementById('zutbody');
+  var c=document.getElementById('zchev');
+  if(b.style.display==='none'){b.style.display='block';c.textContent='▲';}
+  else{b.style.display='none';c.textContent='▼';}
+}
+function setBasis(id){ST.basis=id;bldZut();go();}
+function setSahne(id){ST.sahne=id;bldZut();go();}
+function bldZut(){
+  var h1='';
+  for(var k in ZUTATEN){
+    h1+='<button class="zutopt'+(ST.basis===k?' on':'')+'" onclick="setBasis(\''+k+'\')">'+ZUTATEN[k].name+'</button>';
+  }
+  document.getElementById('basisopts').innerHTML=h1;
+  var h2='';
+  for(var s in SAHNE){
+    h2+='<button class="zutopt'+(ST.sahne===s?' on':'')+'" onclick="setSahne(\''+s+'\')">'+SAHNE[s].name+'</button>';
+  }
+  document.getElementById('sahneopts').innerHTML=h2;
+  document.getElementById('zinfo').textContent='('+ZUTATEN[ST.basis].name.split(' (')[0]+')';
+}
+
+// Erkennt Magerquark-Menge in einem Rezept und rechnet Nährwerte um
+function gramVon(str){
+  // sucht z.B. "250 g Magerquark"
+  var m=str.match(/(\d+)\s*g\s*Magerquark/i);
+  return m?parseInt(m[1]):0;
+}
+function rezeptNaehr(r){
+  // Basiswerte
+  var kp=r.kp, k1=r.k1, p=r.p, kh=r.kh, f=r.f, zn=r.zn;
+  // Falls Rezept Magerquark enthält und andere Basis gewählt: umrechnen
+  if(ST.basis!=='quark'){
+    var gr=0;
+    r.zu.forEach(function(z){var g=gramVon(z);if(g>gr)gr=g;});
+    if(gr>0){
+      var q=ZUTATEN.quark, neu=ZUTATEN[ST.basis];
+      var faktor=gr/100;
+      // Differenz pro Portion (Rezept = 2 Portionen, also /2)
+      var dKcal=(neu.kcal-q.kcal)*faktor/2;
+      var dP=(neu.p-q.p)*faktor/2;
+      var dKh=(neu.kh-q.kh)*faktor/2;
+      var dF=(neu.f-q.f)*faktor/2;
+      kp=Math.round(kp+dKcal);
+      p=Math.round((p+dP)*10)/10;
+      kh=Math.round((kh+dKh)*10)/10;
+      f=Math.round((f+dF)*10)/10;
+      // 100g-Wert proportional anpassen (~230g pro Portion)
+      k1=Math.round(kp/2.3);
+    }
+  }
+  // Sahne-Umrechnung für Klassiker-Light mit Sahne
+  if(ST.sahne!=='s15'){
+    var grS=0;
+    r.zu.forEach(function(z){var m=z.match(/(\d+)\s*ml\s*Sahne/i);if(m){var g=parseInt(m[1]);if(g>grS)grS=g;}});
+    if(grS>0){
+      var s15=SAHNE.s15, sn=SAHNE[ST.sahne];
+      var fk=grS/100;
+      kp=Math.round(kp+(sn.kcal-s15.kcal)*fk/2);
+      f=Math.round((f+(sn.f-s15.f)*fk/2)*10)/10;
+      k1=Math.round(kp/2.3);
+    }
+  }
+  return {kp:kp,k1:k1,p:p,kh:kh,f:f,zn:zn};
+}
 
 function bldF(){
   var h='';
@@ -422,7 +555,8 @@ function go(){
   var html='';
   list.forEach(function(r){
     var s=KS[r.k];
-    var kal=ST.n==='p'?r.kp:r.k1;
+    var N=rezeptNaehr(r);
+    var kal=ST.n==='p'?N.kp:N.k1;
     var isO=ST.o===r.id;
     var isL=r.t.toLowerCase().indexOf('light')>=0;
     var em=r.s.split(' ')[0];
@@ -431,7 +565,12 @@ function go(){
     if(isO){
       var zi='';
       r.zu.forEach(function(z){
-        var parts=z.split('(oder');
+        // Magerquark durch gewählte Basis ersetzen
+        var zt=z;
+        if(ST.basis!=='quark' && /Magerquark/i.test(z)){
+          zt=z.replace(/Magerquark/i, ZUTATEN[ST.basis].name.split(' (')[0]);
+        }
+        var parts=zt.split('(oder');
         zi+='<div class="ing"><span style="color:'+s.ac+';flex-shrink:0">●</span><span style="color:#333;line-height:1.45">'+parts[0].trim()+(parts.length>1?'<br><span class="alt">(oder'+parts.slice(1).join('(oder')+'</span>':'')+'</span></div>';
       });
       var st='';
@@ -447,13 +586,13 @@ function go(){
             '<button class="ntb'+(ST.n==='1'?' on':'')+'" style="'+(ST.n==='1'?'background:'+s.ac:'')+'" onclick="setN(\'1\')">100g</button>'+
           '</div></div>'+
           '<div class="ng">'+
-            '<span class="nl">🔥 Kalorien</span><span class="nv">'+(ST.n==='p'?r.kp:r.k1)+' kcal</span>'+
-            '<span class="nl">💪 Protein</span><span class="nv">'+r.p+' g</span>'+
-            '<span class="nl">🌾 Kohlenhydrate</span><span class="nv">'+r.kh+' g</span>'+
-            '<span class="nl">🫒 Fett</span><span class="nv">'+r.f+' g</span>'+
-            '<span class="nl">🍬 Zucker</span><span class="nv" style="color:'+(r.zn===0?'#2e7d32':'#c62828')+'">'+r.zn+' g'+(r.zn===0?' ✓':'')+'</span>'+
+            '<span class="nl">🔥 Kalorien</span><span class="nv">'+(ST.n==='p'?N.kp:N.k1)+' kcal</span>'+
+            '<span class="nl">💪 Protein</span><span class="nv">'+N.p+' g</span>'+
+            '<span class="nl">🌾 Kohlenhydrate</span><span class="nv">'+N.kh+' g</span>'+
+            '<span class="nl">🫒 Fett</span><span class="nv">'+N.f+' g</span>'+
+            '<span class="nl">🍬 Zucker</span><span class="nv" style="color:'+(N.zn===0?'#2e7d32':'#c62828')+'">'+N.zn+' g'+(N.zn===0?' ✓':'')+'</span>'+
           '</div>'+
-          (r.zn>0?'<div class="nn">* Natürlicher / enthaltener Zucker</div>':'')+
+          (N.zn>0?'<div class="nn">* Natürlicher / enthaltener Zucker</div>':'')+
           '<div class="nn">'+(ST.n==='p'?'Pro Portion (½ Behälter ~230g)':'Pro 100 g')+' · Richtwerte</div>'+
         '</div></div>';
     }
@@ -472,15 +611,15 @@ function go(){
         '<span class="cv">'+(isO?'▲':'▼')+'</span>'+
       '</button>'+
       '<div class="chips">'+
-        '<div class="chip"><div class="chv" style="color:#1565c0">'+r.p+'g</div><div class="chl">Protein</div></div>'+
-        '<div class="chip"><div class="chv" style="color:#e65100">'+r.kh+'g</div><div class="chl">Carbs</div></div>'+
-        '<div class="chip"><div class="chv" style="color:#6a1b9a">'+r.f+'g</div><div class="chl">Fett</div></div>'+
-        '<div class="chip"><div class="chv" style="color:'+(r.zn===0?'#2e7d32':'#c62828')+'">'+r.zn+'g</div><div class="chl">Zucker</div></div>'+
+        '<div class="chip"><div class="chv" style="color:#1565c0">'+N.p+'g</div><div class="chl">Protein</div></div>'+
+        '<div class="chip"><div class="chv" style="color:#e65100">'+N.kh+'g</div><div class="chl">Carbs</div></div>'+
+        '<div class="chip"><div class="chv" style="color:#6a1b9a">'+N.f+'g</div><div class="chl">Fett</div></div>'+
+        '<div class="chip"><div class="chv" style="color:'+(N.zn===0?'#2e7d32':'#c62828')+'">'+N.zn+'g</div><div class="chl">Zucker</div></div>'+
       '</div>'+det+'</div>';
   });
   document.getElementById('rl').innerHTML=html;
 }
-bldF();go();
+bldF();bldZut();go();
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
     navigator.serviceWorker.register('/ninja-swirl/sw.js').then(function(r){
