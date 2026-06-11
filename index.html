@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Ninja Swirl">
 <meta name="theme-color" content="#2e7d32">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Ninja Swirl CREAMi</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -480,6 +481,13 @@ function go(){
   document.getElementById('rl').innerHTML=html;
 }
 bldF();go();
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('/ninja-swirl/sw.js').then(function(r){
+      console.log('SW registered');
+    }).catch(function(e){console.log('SW error',e);});
+  });
+}
 </script>
 </body>
 </html>
