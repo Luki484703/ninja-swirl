@@ -1,4 +1,4 @@
-const CACHE='ninja-swirl-v3';
+const CACHE='ninja-swirl-v5';
 const FILES=['/ninja-swirl/','/ninja-swirl/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));
