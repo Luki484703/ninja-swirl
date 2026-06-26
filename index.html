@@ -84,7 +84,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
 <div class="hdr">
   <div class="hdr-icon">🍦</div>
   <h1>Ninja Swirl CREAMi Rezepte</h1>
-  <p id="tlbl">118 Rezepte · Kalorienarm · Protein · Klassiker · Spezial</p>
+  <p id="tlbl">127 Rezepte · Kalorienarm · Protein · Klassiker · Spezial</p>
   <div class="hdr-tags">
     <span class="hdr-tag">🌿 Simpel</span><span class="hdr-tag">💪 Protein</span>
     <span class="hdr-tag">🥥 Raffaello</span><span class="hdr-tag">🍓 Yogurette</span>
@@ -115,6 +115,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
         <div class="zutopts" id="cremigopts"></div>
       </div>
       <div class="zutgrp">
+        <div class="zutlbl">🥛 MORE Sahneprotein (gegen Eiskristalle + Protein):</div>
+        <div class="zutopts" id="moreopts"></div>
+      </div>
+      <div class="zutgrp">
         <div class="zutlbl">Sahne-Sorte (im Cremig-Modus):</div>
         <div class="zutopts" id="sahneopts"></div>
       </div>
@@ -141,7 +145,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f2;
     <strong>🍬 Süße anpassen:</strong> Erythrit hat nur ~70% der Süßkraft von Zucker und 0 kcal. Die Light-Sorten sind mit <strong>5–6 EL Erythrit</strong> angesetzt (entspricht ~40–46 g Zucker-Süße). Wer es <strong>so süß wie die Sahne-Variante</strong> mag, gibt einfach noch <strong>1–2 EL Erythrit</strong> dazu – das kostet keine zusätzlichen Kalorien! Tipp: Erythrit vor dem Einfrieren gut auflösen, sonst kann es leicht kristallin schmecken. Noch einfacher: mit etwas <strong>Chunky Flavour</strong> süßen (Süße von 50 g Zucker pro Portion).
   </div>
   <div class="fbox" style="background:#e8f5e9;margin-top:8px">
-    <strong>🥄 Chunky Flavour (MORE):</strong> Geschmackspulver mit nur ~8 kcal pro 3 g, aber der Süßkraft von ~50 g Zucker – plus echte Stückchen (Keks, Schoko, Frucht). Ideal für Light-Eis: 6 g (2 Portionen) reichen für einen Behälter. Ersetzt Erythrit UND Aroma in einem. Über 15 Sorten erhältlich – du kannst jedes Quark-Eis damit individuell aufpeppen!
+    <strong>🥄 Chunky Flavour (MORE):</strong> Geschmackspulver mit nur ~7 kcal pro 3 g, aber der Süßkraft von ~50 g Zucker – plus echte Stückchen (Keks, Schoko, Frucht). Ideal für Light-Eis: 6 g (2 Portionen) reichen für einen Behälter. Ersetzt Erythrit UND Aroma in einem. Über 16 Sorten erhältlich – du kannst jedes Quark-Eis damit individuell aufpeppen!
+  </div>
+  <div class="fbox" style="background:#e3f2fd;margin-top:8px">
+    <strong>❄️ Eis zu kristallig? Die Profi-Tricks gegen Eiskristalle:</strong><br>
+    <b>1. Re-Spin mit Milch-Schuss</b> – DER wichtigste Trick: Nach dem ersten Durchlauf 40–50 ml Mandelmilch/Milch dazugeben und nochmal „Re-Spin". Aus Eisschnee wird so cremiges Eis.<br>
+    <b>2. MORE Protein Sahne (Casein)</b> – Casein bindet Wasser beim Gefrieren und verhindert Kristalle. Wähle oben im Zutaten-Panel 15 g (Booster gegen Kristalle), 25 g (1 Scoop) oder 50 g (2 Scoops, volle Protein-Basis). Die Nährwerte passen sich automatisch an!<br>
+    <b>3. Eine Prise Xanthan/Guarkernmehl</b> (~1 g) – bindet Wasser, macht cremig. Sparsam dosieren, sonst wird's schleimig.<br>
+    <b>4. Erythrit fein mahlen</b> – zu Puder gemahlen gibt's eine feinere Textur.<br>
+    <b>5. Grundmasse-Prinzip (wie die Community):</b> Milch/Mandelmilch + MORE Protein (+ ggf. Skyr/Quark) glatt mixen oder pürieren (z. B. Thermomix, kalt – nicht über 60 °C!). Einfrieren. Light Ice Cream. <b>Chunky Flavour + Mix-Ins + Schuss Milch erst beim Re-Spin</b> dazu – so bleiben die Stückchen knackig und das Eis wird cremig statt kristallig.
   </div>
 </div>
 <script>
@@ -150,7 +162,8 @@ var QA=' (oder gewählte Basis – siehe oben)';
 var ZUTATEN={
   quark:   {name:'Magerquark (Lidl)',    kcal:69, p:12.0, kh:4.0, f:0.3, z:4.0},
   skyr:    {name:'Skyr Natur (Lidl)',    kcal:62, p:11.0, kh:4.0, f:0.2, z:4.0},
-  joghurt: {name:'Joghurt (Lidl)',       kcal:64, p:6.1, kh:5.5, f:2.0, z:5.5}
+  joghurt: {name:'Joghurt (Lidl)',       kcal:64, p:6.1, kh:5.5, f:2.0, z:5.5},
+  nurmilch:{name:'— nur Milch —',        kcal:0,  p:0,   kh:0,  f:0,  z:0, milchbasis:true}
 };
 var SAHNE={
   s30: {name:'Sahne 30%',     kcal:292, p:2.4, kh:3.2, f:30.0, z:3.2},
@@ -164,6 +177,12 @@ var MILCH={
 var CREMIG={
   pur:    {name:'🪶 Pur (wenig kcal)',  sahneMl:0},
   cremig: {name:'🍦 Cremig (Eisdiele)', sahneMl:40}
+};
+var MOREPRO={
+  ohne: {name:'— ohne —',           g:0,  kcal:0,   p:0,    kh:0,  f:0},
+  p15:  {name:'15 g (Booster)',      g:15, kcal:397, p:77.0, kh:6.0, f:6.9},
+  p25:  {name:'25 g = 1 Scoop',      g:25, kcal:397, p:77.0, kh:6.0, f:6.9},
+  p50:  {name:'50 g = 2 Scoops',     g:50, kcal:397, p:77.0, kh:6.0, f:6.9}
 };
 var R=[
 {id:101,k:'simpel',s:'🍌 Bananen-Eis',t:'1 Zutat',fn:'CREAMifit/Sorbet',kp:134,k1:57,p:1.7,kh:30,f:0.5,zn:18,zf:false,
@@ -450,6 +469,42 @@ tp:'Cremige Panna Cotta mit Himbeere – elegant und leicht!'},
 zu:['280 g Magerquark'+QA,'180 ml Mandelmilch ungesüßt','2 Portionen (6 g) Chunky Flavour Vanilla Chocolate Chip Cookie'],
 zb:['Quark, Mandelmilch und Chunky Flavour glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','Echte Cookie-Stückchen sind schon drin!'],
 tp:'Vanille-Eis mit Cookie-Stücken – der Klassiker als Protein-Eis!'},
+{id:440,k:'icecream',s:'⭐ Ultra-Cremiges Skyr-Protein-Eis',t:'Light',fn:'Light Ice Cream',kp:145,k1:62,p:23.8,kh:6.5,f:2.1,zn:6.3,zf:true,
+zu:['250 g Skyr natur','150 ml Mandelmilch ungesüßt','25 g MORE Protein Sahne (Saucen- & Back-Protein)','2 Portionen (6 g) Chunky Flavour nach Wahl','1 Prise Xanthan (optional, für extra Cremigkeit)'],
+zb:['MORE Sahne erst in der kalten Mandelmilch glatt rühren (keine Klümpchen).','Skyr, Chunky und Xanthan dazu, alles glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','WICHTIG: 40–50 ml Mandelmilch dazu + Re-Spin = richtig cremig!'],
+tp:'Das Casein in der MORE Sahne bindet Wasser → kaum Eiskristalle! Nur 146 kcal, 24g Protein.'},
+{id:441,k:'icecream',s:'⭐ MORE Sahne McFlurry-Style',t:'Light',fn:'Light Ice Cream',kp:141,k1:60,p:15.8,kh:10.2,f:3.5,zn:10.1,zf:true,
+zu:['350 ml fettarme Milch','25 g MORE Protein Sahne (Saucen- & Back-Protein)','2 Portionen (6 g) Chunky Flavour nach Wahl','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne in der kalten Milch glatt rühren.','Chunky und Xanthan dazu, gut shaken oder mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','50 ml Milch dazu + Re-Spin = McFlurry-cremig!'],
+tp:'Schmeckt authentisch wie McFlurry! Die Profis schwören auf diese Kombi.'},
+{id:442,k:'icecream',s:'⭐ Eisdielen-Style Protein-Eis',t:'Light',fn:'Light Ice Cream',kp:194,k1:82,p:22.9,kh:11,f:5.6,zn:10.1,zf:true,
+zu:['200 g Magerquark','100 ml Kochsahne 7%','150 ml fettarme Milch','20 g MORE Protein Sahne','2 Portionen (6 g) Chunky Flavour nach Wahl','1 Prise Xanthan'],
+zb:['MORE Sahne in der kalten Milch glatt rühren.','Quark, Kochsahne, Chunky und Xanthan dazu, glatt mixen.','24 Std. einfrieren, 10 Min. antauen, Light Ice Cream starten.','40 ml Milch dazu + Re-Spin für die perfekte Eisdielen-Textur.'],
+tp:'Am nächsten an echtem Eisdielen-Eis – durch Kochsahne + Casein cremig wie aus der Gelateria!'},
+{id:450,k:'icecream',s:'🥛 Milch-Basis Vanille-Eis',t:'Light',fn:'Light Ice Cream',kp:138,k1:59,p:20.3,kh:2.4,f:4.5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt (oder fettarme Milch)','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Vanilla Perfection','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch glatt mixen/pürieren (kalt, nicht über 60°C) – keine Klümpchen.','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch (40-50 ml) dazu = cremig!'],
+tp:'Reine Milch-Basis – nur 138 kcal, 20g Protein, fast keine Kohlenhydrate! Das Profi-Prinzip aus dem Netz.'},
+{id:451,k:'icecream',s:'🥛 Milch-Basis Schoko-Eis',t:'Light',fn:'Light Ice Cream',kp:146,k1:62,p:20.8,kh:2.9,f:5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Fine Milk Chocolate','1 TL Kakaopulver','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch + Kakao glatt mixen/pürieren (kalt).','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch dazu = cremig!'],
+tp:'Schokoladig und proteinreich bei minimalen Kalorien!'},
+{id:452,k:'icecream',s:'🥛 Milch-Basis Erdbeer-Eis',t:'Light',fn:'Light Ice Cream',kp:138,k1:59,p:20.3,kh:2.4,f:4.5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Strawberry Perfection','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch glatt mixen/pürieren (kalt).','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch dazu = cremig!'],
+tp:'Fruchtig-cremig mit echten Stückchen – das einfachste Sommereis!'},
+{id:453,k:'icecream',s:'🥛 Milch-Basis Salted-Caramel-Eis',t:'Light',fn:'Light Ice Cream',kp:138,k1:59,p:20.3,kh:2.4,f:4.5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Salted Caramel','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch glatt mixen/pürieren (kalt).','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch dazu = cremig!'],
+tp:'Süß-salziges Karamell – die Trend-Sorte als reine Protein-Basis!'},
+{id:454,k:'icecream',s:'🥛 Milch-Basis Cookie-Eis',t:'Light',fn:'Light Ice Cream',kp:138,k1:59,p:20.3,kh:2.4,f:4.5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Vanilla Chocolate Chip Cookie','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch glatt mixen/pürieren (kalt).','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch dazu = cremig!'],
+tp:'Cookie-Eis mit echten Keksstücken – proteinreich und cremig!'},
+{id:455,k:'icecream',s:'🥛 Milch-Basis Stracciatella-Eis',t:'Light',fn:'Light Ice Cream',kp:138,k1:59,p:20.3,kh:2.4,f:4.5,zn:2.1,zf:true,
+zu:['420 ml Mandelmilch ungesüßt','50 g MORE Protein Sahne (2 Scoops)','2 Portionen (6 g) Chunky Flavour Stracciatella','1 Prise Xanthan (optional)'],
+zb:['MORE Sahne + Mandelmilch glatt mixen/pürieren (kalt).','In Behälter füllen, 24 Std. einfrieren.','10 Min. antauen, Light Ice Cream starten.','Beim Re-Spin: Chunky + Schuss Milch dazu. Optional Zartbitter-Splitter als Mix-in.'],
+tp:'Italienischer Klassiker als reine Milch-Protein-Basis!'},
 {id:501,k:'normal',s:'🍦 Vanille klassisch',t:'Klassiker Normal',fn:'Ice Cream/Gelato',kp:487,k1:209,p:5.7,kh:40.5,f:33.6,zn:40.5,zf:false,
 zu:['200 ml Vollmilch','200 ml Sahne 30%','65 g Zucker','2 TL Vanilleextrakt'],
 zb:['Alle Zutaten verrühren bis Zucker aufgelöst, in Behälter füllen.','24 Std. einfrieren, 10 Min. antauen, Ice Cream starten.'],
@@ -643,7 +698,7 @@ tp:'Optional: ½ Bueno-Stange als Mix-in für den echten Bueno-Biss!'}
 var KATS=[{id:'alle',l:'Alle',e:'🍦'},{id:'simpel',l:'1–2 Zutaten',e:'🌿'},{id:'creamifit',l:'CREAMifit',e:'🍃'},{id:'protein',l:'Protein',e:'💪'},{id:'frogurt',l:'Frozen Yogurt',e:'🥄'},{id:'icecream',l:'Ice Cream light',e:'🧊'},{id:'normal',l:'Klassiker',e:'🍨'},{id:'spezial',l:'⭐ Spezial',e:'🍫'}];
 var KS={simpel:{bg:'#fff3e0',ac:'#e65100'},creamifit:{bg:'#e8f5e9',ac:'#2e7d32'},protein:{bg:'#e3f2fd',ac:'#1565c0'},frogurt:{bg:'#fce4ec',ac:'#880e4f'},icecream:{bg:'#e8eaf6',ac:'#3949ab'},normal:{bg:'#fff8e1',ac:'#f57f17'},spezial:{bg:'#fbe9e7',ac:'#bf360c'}};
 var KL={simpel:'1–2 Zutaten',creamifit:'CREAMifit',protein:'Protein-Eis',frogurt:'Frozen Yogurt',icecream:'Ice Cream light',normal:'Klassiker',spezial:'Spezial'};
-var ST={n:'p',k:'alle',s:'',zf:false,li:false,o:null,basis:'quark',sahne:'s15',milch:'mandel',cremig:'pur'};
+var ST={n:'p',k:'alle',s:'',zf:false,li:false,o:null,basis:'quark',sahne:'s15',milch:'mandel',cremig:'pur',morepro:'ohne'};
 
 function kc(v){return v<100?'#2e7d32':v<200?'#e65100':'#c62828';}
 function setN(v){ST.n=v;document.getElementById('bp').className='tb'+(v==='p'?' on':'');document.getElementById('b1').className='tb'+(v==='1'?' on':'');document.getElementById('bb').className='tb'+(v==='b'?' on':'');go();}
@@ -663,6 +718,7 @@ function setBasis(id){ST.basis=id;bldZut();go();}
 function setSahne(id){ST.sahne=id;bldZut();go();}
 function setMilch(id){ST.milch=id;bldZut();go();}
 function setCremig(id){ST.cremig=id;bldZut();go();}
+function setMorepro(id){ST.morepro=id;bldZut();go();}
 function bldZut(){
   var h1='';
   for(var k in ZUTATEN){
@@ -675,6 +731,12 @@ function bldZut(){
   }
   var ce=document.getElementById('cremigopts');
   if(ce)ce.innerHTML=hc;
+  var hm='';
+  for(var mp in MOREPRO){
+    hm+='<button class="zutopt'+(ST.morepro===mp?' on':'')+'" onclick="setMorepro(\''+mp+'\')">'+MOREPRO[mp].name+'</button>';
+  }
+  var me=document.getElementById('moreopts');
+  if(me)me.innerHTML=hm;
   var h2='';
   for(var s in SAHNE){
     h2+='<button class="zutopt'+(ST.sahne===s?' on':'')+'" onclick="setSahne(\''+s+'\')">'+SAHNE[s].name+'</button>';
@@ -703,6 +765,8 @@ function rezeptNaehr(r){
     r.zu.forEach(function(z){var g=gramVon(z);if(g>gr)gr=g;});
     if(gr>0){
       var q=ZUTATEN.quark, neu=ZUTATEN[ST.basis];
+      // "nur Milch": Quark durch gewählte Milch ersetzen (gleiches Volumen)
+      if(ST.basis==='nurmilch'){neu=MILCH[ST.milch];}
       var faktor=gr/100;
       // Differenz pro Portion (Rezept = 2 Portionen, also /2)
       var dKcal=(neu.kcal-q.kcal)*faktor/2;
@@ -713,6 +777,7 @@ function rezeptNaehr(r){
       p=Math.round((p+dP)*10)/10;
       kh=Math.round((kh+dKh)*10)/10;
       f=Math.round((f+dF)*10)/10;
+      if(p<0)p=0; if(kh<0)kh=0; if(f<0)f=0; if(kp<0)kp=0;
       // 100g-Wert proportional anpassen (~230g pro Portion)
       k1=Math.round(kp/2.3);
     }
@@ -757,6 +822,19 @@ function rezeptNaehr(r){
     kh=Math.round((kh+sa.kh*fkC/2)*10)/10;
     f=Math.round((f+sa.f*fkC/2)*10)/10;
     k1=Math.round(kp/2.3);
+  }
+  // MORE Sahneprotein (nur Light-Rezepte, die es nicht schon fest enthalten)
+  if(ST.morepro!=='ohne' && /light/i.test(r.t)){
+    var hatMore=r.zu.some(function(z){return /MORE Protein Sahne/i.test(z);});
+    if(!hatMore){
+      var mo=MOREPRO[ST.morepro];
+      var fkO=mo.g/100;
+      kp=Math.round(kp+mo.kcal*fkO/2);
+      p=Math.round((p+mo.p*fkO/2)*10)/10;
+      kh=Math.round((kh+mo.kh*fkO/2)*10)/10;
+      f=Math.round((f+mo.f*fkO/2)*10)/10;
+      k1=Math.round(kp/2.3);
+    }
   }
   return {kp:kp,k1:k1,p:p,kh:kh,f:f,zn:zn};
 }
